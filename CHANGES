@@ -1,0 +1,10 @@
+62
+* Switched to parse_string in the XPath convienince function. parse_html_string was causing
+  trouble with plain XML.
+
+57
+*added changes
+*unmade a CPAN mistake
+
+56
+*initial release
