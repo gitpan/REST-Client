@@ -68,7 +68,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 62 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 88 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -353,7 +353,12 @@ sub responseXpath {
 
     my $xml= XML::LibXML->new();
     $xml->load_ext_dtd(0);
-    return $xml->parse_string( $self->responseContent() );
+
+    if($self->responseHeader('Content-type') =~ /html/){
+        return XML::LibXML::XPathContext->new($xml->parse_html_string( $self->responseContent() ));
+    }else{
+        return XML::LibXML::XPathContext->new($xml->parse_string( $self->responseContent() ));
+    }
 }
 
 

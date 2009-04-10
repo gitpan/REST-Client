@@ -1,3 +1,6 @@
+88
+* Added html content-type detection to responseXPath to avoid xmlns issues when parsing html/xhtml.
+
 62
 * Switched to parse_string in the XPath convienince function. parse_html_string was causing
   trouble with plain XML.
