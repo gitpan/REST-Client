@@ -1,3 +1,6 @@
+95
+*Fixed http://rt.cpan.org/Public/Bug/Display.html?id=43819 - thanks Russ.
+
 88
 * Added html content-type detection to responseXPath to avoid xmlns issues when parsing html/xhtml.
 

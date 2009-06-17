@@ -68,7 +68,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 88 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 95 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -158,7 +158,7 @@ Preform an HTTP POST to the resource specified. Takes an optional body content a
 
 sub POST {
     my $self = shift;
-    return $self->request('PUT', @_);
+    return $self->request('POST', @_);
 }
 
 =item DELETE ( $url, [%$headers] )
