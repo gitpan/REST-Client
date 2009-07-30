@@ -49,6 +49,9 @@ REST::Client - A simple client for interacting with RESTful http/https resources
  #Requests can be specificed directly as well
  $client->request('GET', '/dir/file', 'request body content', {CustomHeader => 'Value'});
 
+ #Requests can optionally automatically follow redirects and auth, defaults to false
+ $client->setFollow(1);
+
 =head1 DESCRIPTION
 
 REST::Client provides a simple way to interact with HTTP RESTful resources.
@@ -68,7 +71,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 95 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 118 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -101,6 +104,11 @@ The path to a X509 key file to be used for client authentication.
 =item ca
 
 The path to a certificate authority file to be used to verify host certificates.
+
+=item follow
+
+Boolean that determins whether REST::Client attempts to automatically follow redirects/authentication.
+The default is false.
 
 =back
 
@@ -283,7 +291,7 @@ sub request {
         }
     }
 
-    my $res = $ua->request($req);
+    my $res = $self->getFollow ? $ua->request($req) : $ua->simple_request($req);
     $IO::Socket::SSL::VERSION = $tmp_socket_ssl_version;
 
     $self->{_res} = $res;
@@ -383,7 +391,7 @@ sub _buildAccessors {
 
     return if $self->can('setHost');
 
-    my @attributes = qw(Host Key Cert Ca Timeout);
+    my @attributes = qw(Host Key Cert Ca Timeout Follow);
 
     for my $attribute (@attributes){
         my $set_method = "

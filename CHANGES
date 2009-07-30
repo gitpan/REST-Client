@@ -1,3 +1,7 @@
+118
+* Changed default behavior to not follow redirects.
+* Added an option to re-enable original auto-following behavior.
+
 95
 *Fixed http://rt.cpan.org/Public/Bug/Display.html?id=43819 - thanks Russ.
 
