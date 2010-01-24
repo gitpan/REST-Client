@@ -18,7 +18,7 @@
 #     NO_META => q[1]
 #     PL_FILES => {  }
 #     PREREQ_PM => { LWP::UserAgent=>q[0], URI=>q[0], ExtUtils::MakeMaker=>q[6.42], Crypt::SSLeay=>q[0] }
-#     VERSION => q[118]
+#     VERSION => q[134]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
 
@@ -41,7 +41,7 @@ FULL_AR = /usr/bin/ar
 LD = cc
 LDDLFLAGS = -shared -O2 -g -L/usr/local/lib
 LDFLAGS =  -L/usr/local/lib
-LIBC = /lib/libc-2.9.so
+LIBC = /lib/libc-2.10.1.so
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = linux
@@ -60,11 +60,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = REST::Client
 NAME_SYM = REST_Client
-VERSION = 118
+VERSION = 134
 VERSION_MACRO = VERSION
-VERSION_SYM = 118
+VERSION_SYM = 134
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 118
+XS_VERSION = 134
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -255,7 +255,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = REST-Client
-DISTVNAME = REST-Client-118
+DISTVNAME = REST-Client-134
 
 
 # --- MakeMaker macro section:
@@ -714,7 +714,7 @@ $(MAKE_APERL_FILE) : $(FIRST_MAKEFILE) pm_to_blib
 TEST_VERBOSE=0
 TEST_TYPE=test_$(LINKTYPE)
 TEST_FILE = test.pl
-TEST_FILES = 
+TEST_FILES = t/*.t
 TESTDB_SW = -d
 
 testdb :: testdb_$(LINKTYPE)
@@ -724,9 +724,9 @@ test :: $(TEST_TYPE) subdirs-test
 subdirs-test ::
 	$(NOECHO) $(NOOP)
 
-	$(NOECHO) $(ECHO) 'No tests defined for $(NAME) extension.'
 
 test_dynamic :: pure_all
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) "-MExtUtils::Command::MM" "-e" "test_harness($(TEST_VERBOSE), 'inc', '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
 
 testdb_dynamic :: pure_all
 	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-Iinc" "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
@@ -740,7 +740,7 @@ testdb_static :: testdb_dynamic
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="118,0,0,0">' > $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="134,0,0,0">' > $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <TITLE>$(DISTNAME)</TITLE>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>A simple client for interacting with RESTful http/https resources</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Miles Crawford, &lt;mcrawfor@cpan.org&gt;</AUTHOR>' >> $(DISTNAME).ppd

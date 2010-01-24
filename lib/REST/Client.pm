@@ -46,11 +46,16 @@ REST::Client - A simple client for interacting with RESTful http/https resources
      });
  $client->GET('/dir/file', {CustomHeader => 'Value'});
   
- #Requests can be specificed directly as well
+ # Requests can be specificed directly as well
  $client->request('GET', '/dir/file', 'request body content', {CustomHeader => 'Value'});
 
- #Requests can optionally automatically follow redirects and auth, defaults to false
+ # Requests can optionally automatically follow redirects and auth, defaults to
+ # false 
  $client->setFollow(1);
+
+ #It is possible to access the L<LWP::UserAgent> object REST::Client is using to
+ #make requests, and set advanced options on it, for instance:
+ $client->getUseragent()->proxy(['http'], 'http://proxy.example.com/');
 
 =head1 DESCRIPTION
 
@@ -59,8 +64,6 @@ REST::Client provides a simple way to interact with HTTP RESTful resources.
 =cut
 
 =head1 METHODS
-
-=over 4
 
 =cut
 
@@ -71,44 +74,71 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 118 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 134 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
 use Carp qw(croak carp);
 use Crypt::SSLeay;
 
+=head2 Construction and setup
 
-=item new ( [%$config] )
+=head3 new ( [%$config] )
 
-Construct a new REST::Client. Takes an optional hash or hash reference or config flags:
+Construct a new REST::Client. Takes an optional hash or hash reference or
+config flags.  Each config flag also has get/set accessors of the form
+getHost/setHost, getUseragent/setUseragent, etc.  These can be called on the
+instantiated object to change or check values.
+
+The config flags are:
 
 =over 4
 
 =item host
 
-A default host that will be prepended to all requests.  Allows you to just specify the path when making requests.
+A default host that will be prepended to all requests.  Allows you to just
+specify the path when making requests.
+
+The default is undef - you must include the host in your requests.
 
 =item timeout
 
-A timeout in seconds for requests made with the client.  After the timeout the client will return a 500.
+A timeout in seconds for requests made with the client.  After the timeout the
+client will return a 500.
+
+The default is 5 minutes.
 
 =item cert
 
 The path to a X509 certificate file to be used for client authentication.
 
+The default is to not use a certificate/key pair.
+
 =item key
 
 The path to a X509 key file to be used for client authentication.
 
+The default is to not use a certificate/key pair.
+
 =item ca
 
-The path to a certificate authority file to be used to verify host certificates.
+The path to a certificate authority file to be used to verify host
+certificates.
+
+The default is to not use a certificates authority.
 
 =item follow
 
-Boolean that determins whether REST::Client attempts to automatically follow redirects/authentication.
+Boolean that determins whether REST::Client attempts to automatically follow
+redirects/authentication.  
+
 The default is false.
+
+=item useragent
+
+An L<LWP::UserAgent> object, ready to make http requests.  
+
+REST::Client will provide a default for you if you do not set this.
 
 =back
 
@@ -131,84 +161,12 @@ sub new {
     my $self = bless({}, $class);
     $self->{'_config'} = $config;
 
+    $self->_buildUseragent();
+
     return $self;
 }
 
-=item GET ( $url, [%$headers] )
-
-Preform an HTTP GET to the resource specified. Takes an optional hashref of custom request headers.
-
-=cut
-
-sub GET {
-    my $self = shift;
-    my $url = shift;
-    my $headers = shift;
-    return $self->request('GET', $url, undef, $headers);
-}
-
-=item PUT ($url, [$body_content, %$headers] )
-
-Preform an HTTP PUT to the resource specified. Takes an optional body content and hashref of custom request headers.
-
-=cut
-
-sub PUT {
-    my $self = shift;
-    return $self->request('PUT', @_);
-}
-
-=item POST ( $url, [$body_content, %$headers] )
-
-Preform an HTTP POST to the resource specified. Takes an optional body content and hashref of custom request headers.
-
-=cut
-
-sub POST {
-    my $self = shift;
-    return $self->request('POST', @_);
-}
-
-=item DELETE ( $url, [%$headers] )
-
-Preform an HTTP DELETE to the resource specified. Takes an optional hashref of custom request headers.
-
-=cut
-
-sub DELETE {
-    my $self = shift;
-    my $url = shift;
-    my $headers = shift;
-    return $self->request('DELETE', $url, undef, $headers);
-}
-
-=item OPTIONS ( $url, [%$headers] )
-
-Preform an HTTP OPTIONS to the resource specified. Takes an optional hashref of custom request headers.
-
-=cut
-
-sub OPTIONS {
-    my $self = shift;
-    my $url = shift;
-    my $headers = shift;
-    return $self->request('OPTIONS', $url, undef, $headers);
-}
-
-=item HEAD ( $url, [%$headers] )
-
-Preform an HTTP HEAD to the resource specified. Takes an optional hashref of custom request headers.
-
-=cut
-
-sub HEAD {
-    my $self = shift;
-    my $url = shift;
-    my $headers = shift;
-    return $self->request('HEAD', $url, undef, $headers);
-}
-
-=item addHeader ( $header_name, $value )
+=head3 addHeader ( $header_name, $value )
 
 Add a custom header to the next request.
 
@@ -225,12 +183,94 @@ sub addHeader {
     return;
 }
 
-=item request ( $method, $url, [$body_content, %$headers] )
+=head2 Request Methods
+
+Each of these methods makes an HTTP request, sets the internal state of the
+object, and returns the object.
+
+They can be combined with the response methods, such as:
+
+ print $client->GET('/search/?q=foobar')->responseContent();
+
+=head3 GET ( $url, [%$headers] )
+
+Preform an HTTP GET to the resource specified. Takes an optional hashref of custom request headers.
+
+=cut
+
+sub GET {
+    my $self = shift;
+    my $url = shift;
+    my $headers = shift;
+    return $self->request('GET', $url, undef, $headers);
+}
+
+=head3 PUT ($url, [$body_content, %$headers] )
+
+Preform an HTTP PUT to the resource specified. Takes an optional body content and hashref of custom request headers.
+
+=cut
+
+sub PUT {
+    my $self = shift;
+    return $self->request('PUT', @_);
+}
+
+=head3 POST ( $url, [$body_content, %$headers] )
+
+Preform an HTTP POST to the resource specified. Takes an optional body content and hashref of custom request headers.
+
+=cut
+
+sub POST {
+    my $self = shift;
+    return $self->request('POST', @_);
+}
+
+=head3 DELETE ( $url, [%$headers] )
+
+Preform an HTTP DELETE to the resource specified. Takes an optional hashref of custom request headers.
+
+=cut
+
+sub DELETE {
+    my $self = shift;
+    my $url = shift;
+    my $headers = shift;
+    return $self->request('DELETE', $url, undef, $headers);
+}
+
+=head3 OPTIONS ( $url, [%$headers] )
+
+Preform an HTTP OPTIONS to the resource specified. Takes an optional hashref of custom request headers.
+
+=cut
+
+sub OPTIONS {
+    my $self = shift;
+    my $url = shift;
+    my $headers = shift;
+    return $self->request('OPTIONS', $url, undef, $headers);
+}
+
+=head3 HEAD ( $url, [%$headers] )
+
+Preform an HTTP HEAD to the resource specified. Takes an optional hashref of custom request headers.
+
+=cut
+
+sub HEAD {
+    my $self = shift;
+    my $url = shift;
+    my $headers = shift;
+    return $self->request('HEAD', $url, undef, $headers);
+}
+
+=head3 request ( $method, $url, [$body_content, %$headers] )
 
 Issue a custom request, providing all possible values.
 
 =cut
-
 
 sub request {
     my $self = shift;
@@ -240,6 +280,7 @@ sub request {
     my $headers = shift;
 
     $self->{'_res'} = undef;
+    $self->_buildUseragent();
 
 
     #error check
@@ -248,16 +289,18 @@ sub request {
     croak "REST::Client exception: headers must be presented as a hashref" if $headers && ref $headers ne 'HASH';
 
 
-    #build UA
     $url = $self->_prepareURL($url);
 
     #to ensure we use our desired SSL lib
     my $tmp_socket_ssl_version = $IO::Socket::SSL::VERSION;
     $IO::Socket::SSL::VERSION = undef;
 
-    my $ua = LWP::UserAgent->new;
-    $ua->agent("REST::Client/$VERSION");
-    $ua->timeout($self->getTimeout) if $self->getTimeout;
+    my $ua = $self->getUseragent();
+    if(defined $self->getTimeout()){
+        $ua->timeout($self->getTimeout);
+    }else{
+        $ua->timeout(300);
+    }
     my $req = HTTP::Request->new( $method => $url );
 
     #build headers
@@ -299,7 +342,7 @@ sub request {
     return $self;
 }
 
-=item responseCode ()
+=head3 responseCode ()
 
 Return the HTTP response code of the last request
 
@@ -310,7 +353,7 @@ sub responseCode {
     return $self->{_res}->code;
 }
 
-=item responseContent ()
+=head3 responseContent ()
 
 Return the response body content of the last request
 
@@ -321,9 +364,9 @@ sub responseContent {
     return $self->{_res}->content;
 }
 
-=item responseHeader ()
+=head3 responseHeader ( $header )
 
-Return the HTTP headers from the last response
+Return a HTTP header from the last response
 
 =cut
 
@@ -334,9 +377,12 @@ sub responseHeader {
     return $self->{_res}->header($header);
 }
 
-=item buildQuery ( [...] )
+=head3 buildQuery ( [...] )
 
-A convienience wrapper around URI::query_form for building query strings. See L<URI>
+A convienience wrapper around URI::query_form for building query strings from a
+variety of data structures. See L<URI>
+
+Returns a scalar query string for use in URLs.
 
 =cut
 
@@ -348,7 +394,7 @@ sub buildQuery {
     return $uri->as_string();
 }
 
-=item responseXpath ()
+=head3 responseXpath ()
 
 A convienience wrapper that returns a L<XML::LibXML> xpath context for the body content.  Assumes the content is XML.
 
@@ -386,12 +432,24 @@ sub _prepareURL {
     return $url;
 }
 
+sub _buildUseragent {
+    my $self = shift;
+
+    return if $self->getUseragent();
+
+    my $ua = LWP::UserAgent->new;
+    $ua->agent("REST::Client/$VERSION");
+    $self->setUseragent($ua);
+
+    return;
+}
+
 sub _buildAccessors {
     my $self = shift;
 
     return if $self->can('setHost');
 
-    my @attributes = qw(Host Key Cert Ca Timeout Follow);
+    my @attributes = qw(Host Key Cert Ca Timeout Follow Useragent);
 
     for my $attribute (@attributes){
         my $set_method = "
@@ -421,7 +479,6 @@ sub _buildAccessors {
 
 1;
 
-=back
 
 =head1 TODO
 
@@ -433,7 +490,7 @@ Miles Crawford, E<lt>mcrawfor@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright 2008 - 2009 by Miles Crawford.
+Copyright 2008 - 2010 by Miles Crawford.
 
 This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 

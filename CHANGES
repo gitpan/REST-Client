@@ -1,3 +1,10 @@
+134
+* Added a method for accessing the LWP::UserAgent.
+* Added user agent config.
+* Cached user agent for all requests.
+* Improved pod.
+* Basic tests.
+
 118
 * Changed default behavior to not follow redirects.
 * Added an option to re-enable original auto-following behavior.
