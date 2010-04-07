@@ -4,15 +4,15 @@ use warnings;
 unshift @INC, "../lib";
 
 my $how_many;
+my $have_server;
 
 BEGIN {
     $how_many = 35;
+    eval { require HTTP::Server::Simple; };
+    $have_server = $@ ? 0 : 1;
 }
 
 use Test::More tests => $how_many;
-eval { require HTTP::Server::Simple; };
-
-my $have_server = $@ ? 0 : 1;
 
 SKIP: {
     skip( 'No HTTP::Server::Simple, can\'t test', $how_many )
@@ -121,7 +121,10 @@ exit;
 
 package REST::Client::TestServer;
 
-use base qw(HTTP::Server::Simple::CGI);
+BEGIN{
+    eval 'require HTTP::Server::Simple::CGI;';
+    our @ISA = qw(HTTP::Server::Simple::CGI);
+}
 
 sub handle_request {
     my ( $self, $cgi ) = @_;

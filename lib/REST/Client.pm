@@ -74,7 +74,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 134 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 150 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -495,4 +495,3 @@ Copyright 2008 - 2010 by Miles Crawford.
 This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 
 =cut
-

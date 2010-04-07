@@ -1,3 +1,6 @@
+150
+* Made the tests smarter about skipping when required libs not present.
+
 134
 * Added a method for accessing the LWP::UserAgent.
 * Added user agent config.
