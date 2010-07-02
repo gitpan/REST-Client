@@ -74,7 +74,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 150 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 164 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -363,6 +363,19 @@ sub responseContent {
     my $self = shift;
     return $self->{_res}->content;
 }
+
+=head3 responseHeaders()
+
+Returns a list of HTTP header names from the last response
+
+=cut
+
+sub responseHeaders {
+    my $self = shift;
+    return $self->{_res}->headers()->header_field_names();
+}
+
+
 
 =head3 responseHeader ( $header )
 

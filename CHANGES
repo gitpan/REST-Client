@@ -1,3 +1,7 @@
+164
+* Added a responseHeaders() method 
+* Added sanity tests of responseHeaders() and responseHeader()
+
 150
 * Made the tests smarter about skipping when required libs not present.
 

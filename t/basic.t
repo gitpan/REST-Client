@@ -7,7 +7,7 @@ my $how_many;
 my $have_server;
 
 BEGIN {
-    $how_many = 35;
+    $how_many = 37;
     eval { require HTTP::Server::Simple; };
     $have_server = $@ ? 0 : 1;
 }
@@ -110,6 +110,11 @@ SKIP: {
         is( $client->GET($path)->responseCode(), 400, "Error code" );
         $path = "/bogus/";
         is( $client->GET($path)->responseCode(), 404, "Not found code" );
+
+        ok(scalar($client->responseHeaders()), 'Header names available');
+        ok( $client->responseHeader('Client-Response-Num'), 'Can pull a header');
+
+
     };
 
     warn "Tests died: $@" if $@;
