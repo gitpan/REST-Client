@@ -1,3 +1,9 @@
+171
+* Improved POD with better organization and a fix suggested by
+  Joshua Barratt (Thanks!)
+* Added support for PKCS12 certificates in the config API,
+  suggested by Sabst (Thanks!)
+
 164
 * Added a responseHeaders() method 
 * Added sanity tests of responseHeaders() and responseHeader()

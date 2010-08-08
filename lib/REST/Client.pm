@@ -17,7 +17,7 @@ REST::Client - A simple client for interacting with RESTful http/https resources
  $client->setHost('http://example.com');
  $client->PUT('/dir/file.xml', '<example>new content</example>');
  if( $client->responseCode() eq '200' ){
-     print "Deleted\n";
+     print "Updated\n";
  }
   
  #custom request headers may be added
@@ -74,7 +74,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 164 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 171 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -127,6 +127,14 @@ certificates.
 
 The default is to not use a certificates authority.
 
+=item pkcs12
+
+The path to a PKCS12 certificate to be used for client authentication.
+
+=item pkcs12password
+
+The password for the PKCS12 certificate specified with 'pkcs12'.
+
 =item follow
 
 Boolean that determins whether REST::Client attempts to automatically follow
@@ -168,7 +176,7 @@ sub new {
 
 =head3 addHeader ( $header_name, $value )
 
-Add a custom header to the next request.
+Add a custom header to any requests made by this client.
 
 =cut
 
@@ -182,6 +190,25 @@ sub addHeader {
     $self->{'_headers'} = $headers;
     return;
 }
+
+=head3 buildQuery ( [...] )
+
+A convienience wrapper around URI::query_form for building query strings from a
+variety of data structures. See L<URI>
+
+Returns a scalar query string for use in URLs.
+
+=cut
+
+sub buildQuery {
+    my $self = shift;
+
+    my $uri = URI->new();
+    $uri->query_form(@_);
+    return $uri->as_string();
+}
+
+
 
 =head2 Request Methods
 
@@ -324,13 +351,24 @@ sub request {
     #prime LWP with ssl certfile if we have values
     if($self->getCert){
         carp "REST::Client exception: Certs defined but not using https" unless $url =~ /^https/;
-
         croak "REST::Client exception: Cannot read cert and key file" unless -f $self->getCert && -f $self->getKey;
+
         $ENV{'HTTPS_CERT_FILE'} = $self->getCert;
         $ENV{'HTTPS_KEY_FILE'}  = $self->getKey; 
         if(my $ca = $self->getCa){
             croak "REST::Client exception: Cannot read CA file" unless -f $ca;
             $ENV{'HTTPS_CA_FILE'}  = $ca
+        }
+    }
+
+    #prime LWP with PKCS12 certificate if we have one
+    if($self->getPkcs12){
+        carp "REST::Client exception: PKCS12 cert defined but not using https" unless $url =~ /^https/;
+        croak "REST::Client exception: Cannot read PKCS12 cert" unless -f $self->getPkcs12;
+
+        $ENV{HTTPS_PKCS12_FILE}     = $self->getPkcs12;
+        if($self->getPkcs12password){
+            $ENV{HTTPS_PKCS12_PASSWORD} = $self->getPkcs12password;
         }
     }
 
@@ -341,6 +379,11 @@ sub request {
 
     return $self;
 }
+
+=head2 Response Methods
+
+Use these methods to gather information about the last requset
+performed.
 
 =head3 responseCode ()
 
@@ -390,23 +433,6 @@ sub responseHeader {
     return $self->{_res}->header($header);
 }
 
-=head3 buildQuery ( [...] )
-
-A convienience wrapper around URI::query_form for building query strings from a
-variety of data structures. See L<URI>
-
-Returns a scalar query string for use in URLs.
-
-=cut
-
-sub buildQuery {
-    my $self = shift;
-
-    my $uri = URI->new();
-    $uri->query_form(@_);
-    return $uri->as_string();
-}
-
 =head3 responseXpath ()
 
 A convienience wrapper that returns a L<XML::LibXML> xpath context for the body content.  Assumes the content is XML.
@@ -428,6 +454,7 @@ sub responseXpath {
     }
 }
 
+# Private methods
 
 sub _prepareURL {
     my $self = shift;
@@ -462,7 +489,7 @@ sub _buildAccessors {
 
     return if $self->can('setHost');
 
-    my @attributes = qw(Host Key Cert Ca Timeout Follow Useragent);
+    my @attributes = qw(Host Key Cert Ca Timeout Follow Useragent Pkcs12 Pkcs12password);
 
     for my $attribute (@attributes){
         my $set_method = "
