@@ -1,3 +1,7 @@
+217
+* Disabled use of http::server::simple on windows, suggested by
+  Adam Kennedy, thanks.
+
 171
 * Improved POD with better organization and a fix suggested by
   Joshua Barratt (Thanks!)

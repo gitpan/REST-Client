@@ -3,20 +3,23 @@ use warnings;
 
 unshift @INC, "../lib";
 
-my $how_many;
-my $have_server;
+my $tests = 37;
+use Test::More tests => 37;
 
-BEGIN {
-    $how_many = 37;
-    eval { require HTTP::Server::Simple; };
-    $have_server = $@ ? 0 : 1;
+# Check testing prereqs
+my $run_tests = 1;
+eval { 
+    die "HTTP::Server::Simple misbehaves on Windows" if $^O =~ /MSWin/;
+    require HTTP::Server::Simple; 
+};
+if($@){
+    diag("Won't run tests because: $@");
+    $run_tests = 0;
 }
 
-use Test::More tests => $how_many;
 
 SKIP: {
-    skip( 'No HTTP::Server::Simple, can\'t test', $how_many )
-      unless $have_server;
+    skip('test prereqs not met', $tests) unless $run_tests;
 
     use_ok('REST::Client');
 
@@ -122,6 +125,8 @@ SKIP: {
     kill 15, $pid;
 
 }
+
+done_testing();
 exit;
 
 package REST::Client::TestServer;
