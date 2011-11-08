@@ -74,7 +74,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 217 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 236 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -243,6 +243,17 @@ sub PUT {
     return $self->request('PUT', @_);
 }
 
+=head3 PATCH ( $url, [$body_content, %$headers] )
+
+Preform an HTTP PATCH to the resource specified. Takes an optional body content and hashref of custom request headers.
+
+=cut
+
+sub PATCH {
+    my $self = shift;
+    return $self->request('PATCH', @_);
+}
+
 =head3 POST ( $url, [$body_content, %$headers] )
 
 Preform an HTTP POST to the resource specified. Takes an optional body content and hashref of custom request headers.
@@ -311,7 +322,7 @@ sub request {
 
 
     #error check
-    croak "REST::Client exception: First argument to request must be one of GET, PUT, POST, DELETE, OPTIONS, HEAD" unless $method =~ /^(get|put|post|delete|options|head)$/i;
+    croak "REST::Client exception: First argument to request must be one of GET, PATCH, PUT, POST, DELETE, OPTIONS, HEAD" unless $method =~ /^(get|patch|put|post|delete|options|head)$/i;
     croak "REST::Client exception: Must provide a url to $method" unless $url;
     croak "REST::Client exception: headers must be presented as a hashref" if $headers && ref $headers ne 'HASH';
 

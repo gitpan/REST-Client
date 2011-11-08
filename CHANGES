@@ -1,3 +1,6 @@
+236
+* Added PATCH support by applying Scott Call's PATCH patch. Thanks!
+
 217
 * Disabled use of http::server::simple on windows, suggested by
   Adam Kennedy, thanks.

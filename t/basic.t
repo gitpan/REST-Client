@@ -3,8 +3,8 @@ use warnings;
 
 unshift @INC, "../lib";
 
-my $tests = 37;
-use Test::More tests => 37;
+my $tests = 40;
+use Test::More tests => 39;
 
 # Check testing prereqs
 my $run_tests = 1;
@@ -86,6 +86,7 @@ SKIP: {
         is( $client->GET("/"),     $client, "Client returns self" );
         is( $client->PUT("/"),     $client, "Client returns self" );
         is( $client->POST("/"),    $client, "Client returns self" );
+        is( $client->PATCH("/"),    $client, "Client returns self" );
         is( $client->DELETE("/"),  $client, "Client returns self" );
         is( $client->OPTIONS("/"), $client, "Client returns self" );
         is( $client->HEAD("/"),    $client, "Client returns self" );
@@ -97,6 +98,8 @@ SKIP: {
             $path, "GET content present" );
         is( $client->PUT($path)->responseContent(),
             $path, "PUT content present" );
+        is( $client->PATCH($path)->responseContent(),
+            $path, "PATCH content present" );
         is( $client->POST($path)->responseContent(),
             $path, "POST content present" );
         is( $client->DELETE($path)->responseContent(),
@@ -155,7 +158,7 @@ sub handle_request {
 sub valid_http_method {
     my $self = shift;
     my $method = shift or return 0;
-    return $method =~ /^(?:GET|POST|HEAD|PUT|DELETE|OPTIONS)$/;
+    return $method =~ /^(?:GET|PATCH|POST|HEAD|PUT|DELETE|OPTIONS)$/;
 }
 
 1;
