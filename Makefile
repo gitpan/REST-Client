@@ -1,7 +1,7 @@
 # This Makefile is for the REST::Client extension to perl.
 #
 # It was generated automatically by MakeMaker version
-# 6.55_02 (Revision: 65502) from the contents of
+# 6.56 (Revision: 65600) from the contents of
 # Makefile.PL. Don't edit this file, edit Makefile.PL instead.
 #
 #       ANY CHANGES MADE HERE WILL BE LOST!
@@ -13,14 +13,14 @@
 
 #     ABSTRACT => q[A simple client for interacting with RESTful http/https resources]
 #     AUTHOR => q[Miles Crawford, <mcrawfor@cpan.org>]
-#     BUILD_REQUIRES => {  }
+#     BUILD_REQUIRES => { ExtUtils::MakeMaker=>q[6.42] }
 #     DISTNAME => q[REST-Client]
 #     LICENSE => q[perl]
 #     MIN_PERL_VERSION => q[5.008]
 #     NAME => q[REST::Client]
 #     NO_META => q[1]
-#     PREREQ_PM => { LWP::UserAgent=>q[0], URI=>q[0], ExtUtils::MakeMaker=>q[6.42], Crypt::SSLeay=>q[0] }
-#     VERSION => q[236]
+#     PREREQ_PM => { URI=>q[0], LWP::UserAgent=>q[0], ExtUtils::MakeMaker=>q[6.42], Crypt::SSLeay=>q[0] }
+#     VERSION => q[240]
 #     VERSION_FROM => q[lib/REST/Client.pm]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
@@ -30,7 +30,7 @@
 
 # --- MakeMaker const_config section:
 
-# These definitions are from config.sh (via /usr/lib/perl/5.10/Config.pm).
+# These definitions are from config.sh (via /usr/lib/perl/5.12/Config.pm).
 # They may have been overridden via Makefile.PL or on the command line.
 AR = ar
 CC = cc
@@ -47,10 +47,10 @@ LIBC =
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = linux
-OSVERS = 2.6.24-27-server
+OSVERS = 2.6.24-28-server
 RANLIB = :
-SITELIBEXP = /usr/local/share/perl/5.10.1
-SITEARCHEXP = /usr/local/lib/perl/5.10.1
+SITELIBEXP = /usr/local/share/perl/5.12.4
+SITEARCHEXP = /usr/local/lib/perl/5.12.4
 SO = so
 VENDORARCHEXP = /usr/lib/perl5
 VENDORLIBEXP = /usr/share/perl5
@@ -62,11 +62,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = REST::Client
 NAME_SYM = REST_Client
-VERSION = 236
+VERSION = 240
 VERSION_MACRO = VERSION
-VERSION_SYM = 236
+VERSION_SYM = 240
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 236
+XS_VERSION = 240
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -83,15 +83,15 @@ PREFIX = /usr
 PERLPREFIX = $(PREFIX)
 SITEPREFIX = $(PREFIX)/local
 VENDORPREFIX = $(PREFIX)
-INSTALLPRIVLIB = $(PERLPREFIX)/share/perl/5.10
+INSTALLPRIVLIB = $(PERLPREFIX)/share/perl/5.12
 DESTINSTALLPRIVLIB = $(DESTDIR)$(INSTALLPRIVLIB)
-INSTALLSITELIB = $(SITEPREFIX)/share/perl/5.10.1
+INSTALLSITELIB = $(SITEPREFIX)/share/perl/5.12.4
 DESTINSTALLSITELIB = $(DESTDIR)$(INSTALLSITELIB)
 INSTALLVENDORLIB = $(VENDORPREFIX)/share/perl5
 DESTINSTALLVENDORLIB = $(DESTDIR)$(INSTALLVENDORLIB)
-INSTALLARCHLIB = $(PERLPREFIX)/lib/perl/5.10
+INSTALLARCHLIB = $(PERLPREFIX)/lib/perl/5.12
 DESTINSTALLARCHLIB = $(DESTDIR)$(INSTALLARCHLIB)
-INSTALLSITEARCH = $(SITEPREFIX)/lib/perl/5.10.1
+INSTALLSITEARCH = $(SITEPREFIX)/lib/perl/5.12.4
 DESTINSTALLSITEARCH = $(DESTDIR)$(INSTALLSITEARCH)
 INSTALLVENDORARCH = $(VENDORPREFIX)/lib/perl5
 DESTINSTALLVENDORARCH = $(DESTDIR)$(INSTALLVENDORARCH)
@@ -120,13 +120,13 @@ DESTINSTALLSITEMAN3DIR = $(DESTDIR)$(INSTALLSITEMAN3DIR)
 INSTALLVENDORMAN3DIR = $(VENDORPREFIX)/share/man/man3
 DESTINSTALLVENDORMAN3DIR = $(DESTDIR)$(INSTALLVENDORMAN3DIR)
 PERL_LIB =
-PERL_ARCHLIB = /usr/lib/perl/5.10
+PERL_ARCHLIB = /usr/lib/perl/5.12
 LIBPERL_A = libperl.a
 FIRST_MAKEFILE = Makefile
 MAKEFILE_OLD = Makefile.old
 MAKE_APERL_FILE = Makefile.aperl
 PERLMAINCC = $(CC)
-PERL_INC = /usr/lib/perl/5.10/CORE
+PERL_INC = /usr/lib/perl/5.12/CORE
 PERL = /usr/bin/perl "-Iinc"
 FULLPERL = /usr/bin/perl "-Iinc"
 ABSPERL = $(PERL)
@@ -141,9 +141,9 @@ PERM_DIR = 755
 PERM_RW = 644
 PERM_RWX = 755
 
-MAKEMAKER   = /usr/share/perl/5.10/ExtUtils/MakeMaker.pm
-MM_VERSION  = 6.55_02
-MM_REVISION = 65502
+MAKEMAKER   = /usr/share/perl/5.12/ExtUtils/MakeMaker.pm
+MM_VERSION  = 6.56
+MM_REVISION = 65600
 
 # FULLEXT = Pathname for extension directory (eg Foo/Bar/Oracle).
 # BASEEXT = Basename part of FULLEXT. May be just equal FULLEXT. (eg Oracle)
@@ -195,7 +195,7 @@ PM_TO_BLIB = lib/REST/Client.pm \
 
 
 # --- MakeMaker platform_constants section:
-MM_Unix_VERSION = 6.55_02
+MM_Unix_VERSION = 6.56
 PERL_MALLOC_DEF = -DPERL_EXTMALLOC_DEF -Dmalloc=Perl_malloc -Dfree=Perl_mfree -Drealloc=Perl_realloc -Dcalloc=Perl_calloc
 
 
@@ -260,7 +260,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = REST-Client
-DISTVNAME = REST-Client-236
+DISTVNAME = REST-Client-240
 
 
 # --- MakeMaker macro section:
@@ -745,16 +745,15 @@ testdb_static :: testdb_dynamic
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="236">' > $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="240">' > $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>A simple client for interacting with RESTful http/https resources</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Miles Crawford, &lt;mcrawfor@cpan.org&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <PERLCORE VERSION="5,008,0,0" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Crypt::SSLeay" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="ExtUtils::MakeMaker" VERSION="6.42" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="LWP::UserAgent" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="URI::" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="i686-linux-gnu-thread-multi-5.10" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-gnu-thread-multi-5.12" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '</SOFTPKG>' >> $(DISTNAME).ppd
@@ -775,7 +774,7 @@ pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 
 
 # End.
-# Postamble by Module::Install 1.00
+# Postamble by Module::Install 1.01
 # --- Module::Install::Admin::Makefile section:
 
 realclean purge ::

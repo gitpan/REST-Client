@@ -4,7 +4,7 @@ use warnings;
 unshift @INC, "../lib";
 
 my $tests = 40;
-use Test::More tests => 39;
+use Test::More;
 
 # Check testing prereqs
 my $run_tests = 1;
@@ -129,7 +129,7 @@ SKIP: {
 
 }
 
-done_testing();
+done_testing($tests);
 exit;
 
 package REST::Client::TestServer;
