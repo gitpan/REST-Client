@@ -1,3 +1,6 @@
+243
+* Gave up on counting tests correctly, use done_testing().
+
 236
 * Added PATCH support by applying Scott Call's PATCH patch. Thanks!
 
