@@ -1,3 +1,6 @@
+245
+* Fix test dependencies.
+
 243
 * Gave up on counting tests correctly, use done_testing().
 
