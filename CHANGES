@@ -1,8 +1,14 @@
+249
+* Remove Makefile from distribution.
+
 245
 * Fix test dependencies.
 
 243
 * Gave up on counting tests correctly, use done_testing().
+
+240
+* Fix embarassing test-count mismatch. Thanks Wes Young.
 
 236
 * Added PATCH support by applying Scott Call's PATCH patch. Thanks!
