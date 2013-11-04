@@ -74,7 +74,7 @@ use 5.008_000;
 use constant TRUE => 1;
 use constant FALSE => 0;
 
-our ($VERSION) = ('$Rev: 249 $' =~ /(\d+)/);
+our ($VERSION) = ('$Rev: 271 $' =~ /(\d+)/);
 
 use URI;
 use LWP::UserAgent;
@@ -364,11 +364,11 @@ sub request {
         carp "REST::Client exception: Certs defined but not using https" unless $url =~ /^https/;
         croak "REST::Client exception: Cannot read cert and key file" unless -f $self->getCert && -f $self->getKey;
 
-        $ENV{'HTTPS_CERT_FILE'} = $self->getCert;
-        $ENV{'HTTPS_KEY_FILE'}  = $self->getKey; 
+        $ua->ssl_opts(SSL_cert_file => $self->getCert);
+        $ua->ssl_opts(SSL_key_file => $self->getKey); 
         if(my $ca = $self->getCa){
             croak "REST::Client exception: Cannot read CA file" unless -f $ca;
-            $ENV{'HTTPS_CA_FILE'}  = $ca
+            $ua->ssl_opts(SSL_ca_file => $ca);
         }
     }
 

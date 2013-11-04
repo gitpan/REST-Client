@@ -1,3 +1,7 @@
+271
+* Move to LWP 6.x style SSL setup. Thanks Martin Drasar and Joel Crosswhite,
+  for reports and testing.
+
 249
 * Remove Makefile from distribution.
 
