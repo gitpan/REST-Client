@@ -1,3 +1,6 @@
+272
+* Fix bug that didn't allow false PUT content. Thanks Thomas Hörndlein!
+
 271
 * Move to LWP 6.x style SSL setup. Thanks Martin Drasar and Joel Crosswhite,
   for reports and testing.
